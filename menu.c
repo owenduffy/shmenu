@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.9  1996/06/12 23:36:46  owen
-Bugs fixed.
+Revision 1.10  1996/06/13 10:19:19  owen
+Removed default menu file.
 
+ * Revision 1.9  1996/06/12  23:36:46  owen
+ * Bugs fixed.
+ *
  * Revision 1.8  1996/06/12  23:18:46  owen
  * Revision of return codes.
  *
@@ -40,7 +43,7 @@ Bugs fixed.
 #define NOOPT_EXIT -2
 #define HELP_EXIT -3
 #define ERROR_EXIT -4
-char version[6]="1.04",file_name[256]="menu.scr";
+char version[6]="1.05",file_name[256]="";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
 int rc,parmindx,selection=0,first_time=1,erase=0;
