@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.15  1996/06/18 22:39:55  owen
-Merged of curses and non-curses code.
+Revision 1.16  1996/06/18 22:43:14  owen
+Updated version no.
 
+ * Revision 1.15  1996/06/18  22:39:55  owen
+ * Merged of curses and non-curses code.
+ *
  * Revision 1.14  1996/06/16  23:16:00  owen
  * Revision of error returns, help.
  *
@@ -64,7 +67,7 @@ Merged of curses and non-curses code.
 #define NOOPT_NOEXIT -1
 #define HELP_EXIT 254
 #define ERROR_EXIT 253
-char version[6]="2.01",file_name[256]="",work[256];
+char version[6]="2.02",file_name[256]="",work[256];
 char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
