@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.19  1996/06/19 06:55:33  owen
-Added beep, other minor fixes.
+Revision 1.20  1996/06/25 09:23:09  owen
+Revised error return codes.
 
+ * Revision 1.19  1996/06/19  06:55:33  owen
+ * Added beep, other minor fixes.
+ *
  * Revision 1.18  1996/06/19  00:47:51  owen
  * AIX fixes - halfdelay added.
  *
@@ -74,9 +77,9 @@ Added beep, other minor fixes.
 #include <curses.h>
 #endif
 #define NOOPT_NOEXIT -1
-#define HELP_EXIT 254
-#define ERROR_EXIT 253
-char version[6]="2.02",file_name[256]="",work[256];
+#define HELP_EXIT 125
+#define ERROR_EXIT 124
+char version[6]="2.03",file_name[256]="",work[256];
 char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
