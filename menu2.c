@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.5  1996/06/11 21:52:00  owen
-Reformatted.
+Revision 1.6  1996/06/11 23:34:11  owen
+Fixes for AIX.
 
+ * Revision 1.5  1996/06/11  21:52:00  owen
+ * Reformatted.
+ *
  * Revision 1.4  1996/06/11  21:47:11  owen
  * Revised default/timeout handling.
  *
@@ -20,15 +23,15 @@ Reformatted.
  *
 *************************************************************************/
 /*f+*/
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <termio.h>
-#include <unistd.h>
-char version[6]="1.01",*optarg,command='\0';
+char version[6]="1.02",file_name[256]="menu.scr";
 char rcsid[]="$Id$";
-int optind,optopt,debug=0,timeout=0;
+int debug=0,timeout=0,option;
 int rc,parmindx,selection=0,first_time,erase=0;
-char option,file_name[256]="menu.scr",options[256]="";
+char options[256]="",command='\0';
 struct termio sioio,sioold;
 /************************************************************************/
 
@@ -123,16 +126,14 @@ int help()
 main(int argc,char **argv)
 {
   int rc;
-  char opt;
+  extern int optind,optopt,opterr;
+  extern char *optarg;
+  int opt;
 
   /* process command line options */
-
   optind=optind?optind:1;
   /*opterr=0;*/
-  while(1){
-    opt=getopt(argc,argv,"c:d:eht:");
-    if(opt==-1)
-      break;
+  while((opt=getopt(argc,argv,"c:d:eht:"))!=EOF){
     switch(opt){
       case 'c':
         command=optarg[0];
