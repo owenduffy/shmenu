@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.18  1996/06/19 00:47:51  owen
-AIX fixes - halfdelay added.
+Revision 1.19  1996/06/19 06:55:33  owen
+Added beep, other minor fixes.
 
+ * Revision 1.18  1996/06/19  00:47:51  owen
+ * AIX fixes - halfdelay added.
+ *
  * Revision 1.17  1996/06/19  00:09:42  owen
  * Fixed help for -b option.
  *
@@ -114,6 +117,8 @@ int prompt_c()
   char *p;
   int i;
 
+  if(pass>0)
+    beep();
   if(pass==0)
     display_file_c(file_name);
   else if(pass==1){
@@ -187,10 +192,10 @@ display_file_b(char *file_name)
   }
   else{
     printf("ERROR: cant find menu file: %s\n",file_name);
-    printf("Valid options are: {%s}",options+1);
+    printf("Valid options are: {%s}\n",options+1);
   }
   if(pass>0)
-    printf("ERROR: option is not valid, choose one of {%s}",options+1);
+    printf("\aERROR: option is not valid, choose one of {%s}",options+1);
   printf("\n%s ",promptstr);
   if(command)
     printf("(%c) ",command);
@@ -243,7 +248,7 @@ int prompt_b()
 int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
-  printf("Usage: menu --b] [-c <default> [-t <timeout>]] ");
+  printf("Usage: menu [-b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
   printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
