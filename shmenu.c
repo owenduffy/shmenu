@@ -6,9 +6,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.3  1996/06/11 11:19:45  owen
-Error checking of parms.
+Revision 1.4  1996/06/11 21:47:11  owen
+Revised default/timeout handling.
 
+ * Revision 1.3  1996/06/11  11:19:45  owen
+ * Error checking of parms.
+ *
  * Revision 1.2  1996/06/11  10:58:45  owen
  * Added options.
  *
@@ -123,7 +126,7 @@ main(int argc,char **argv)
 
   /* process command line options */
   optind=optind?optind:1;
-  opterr=0;
+  /*opterr=0;*/
   while(1){
     opt=getopt(argc,argv,"c:d:eht:");
     if(opt==-1)
@@ -167,10 +170,8 @@ main(int argc,char **argv)
     printf("Error: default command not valid.\n\n");
     return -1;
     }
-  if(timeout&&!command){
-    printf("Error: timeout requires default command.\n\n");
-    return -1;
-    }
+  if(timeout&&!command)
+    timeout=0;
   if(argc>optind+1)
     strcpy(file_name,argv[optind+1]);
 
