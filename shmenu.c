@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.13  1996/06/15 22:31:47  owen
-Revision to use curses, menufile now mandatory.
+Revision 1.14  1996/06/16 23:16:00  owen
+Revision of error returns, help.
 
+ * Revision 1.13  1996/06/15  22:31:47  owen
+ * Revision to use curses, menufile now mandatory.
+ *
  * Revision 1.12  1996/06/13  23:08:28  owen
  * Further revision of rc, selectable prompt, upcase revised.
  *
@@ -184,7 +187,8 @@ main(int argc,char **argv)
         break;
       case '?':
       case ':':
-        return help();
+        help();
+        return ERROR_EXIT;
     }
   }
 
@@ -194,6 +198,7 @@ main(int argc,char **argv)
   /* process non-option arg */
   if(argc<=optind){
     printf("ERROR: No options.\n");
+    help();
     return ERROR_EXIT;
   }
   strcpy(options,argv[optind]);
@@ -212,6 +217,7 @@ main(int argc,char **argv)
     strcpy(file_name,argv[optind+1]);
   else{
     printf("ERROR: No menu filename.\n");
+    help();
     return ERROR_EXIT;
   }
 
