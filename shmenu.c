@@ -6,9 +6,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.2  1996/06/11 10:58:45  owen
-Added options.
+Revision 1.3  1996/06/11 11:19:45  owen
+Error checking of parms.
 
+ * Revision 1.2  1996/06/11  10:58:45  owen
+ * Added options.
+ *
  *
 *************************************************************************/
 /*f+*/
@@ -20,7 +23,7 @@ Added options.
 char version[6]="1.01",*optarg,command='\0';
 char rcsid[]="$Id$";
 int optind,optopt,debug=0,timeout=0;
-int rc,parmindx,selection=0,first_time;
+int rc,parmindx,selection=0,first_time,erase=0;
 char option,file_name[256]="menu.scr",options[256]="";
 struct termio sioio,sioold;
 /************************************************************************/
@@ -88,10 +91,13 @@ do{
 ioctl(1,TCSETA,&sioold);
 timeout=0;
 first_time=0;
-if(option==0x1b)
+if(option==0x1b){
+  putchar('\n');
   return -1;
-if(option==0x0a)
+  }
+if(command&&option==0x0a)
   option=command;
+printf("%c \n",option);
 if(p=strchr(options,option))
   return p-options+1;
 else
@@ -102,11 +108,11 @@ else
 int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
-  printf("Usage: menu [-a <accessfile>] [-d <level>] [-h] ");
-  printf("[-l <logfile>] [-p] [-q <queuedir>] [-w <workdir>] \n\n");
-  printf("Copyright: Owen Duffy & Associates Pty Ltd 1995,1996.\n");
+  printf("Usage: menu [-e] [-c <default> [-t <timeout>]] ");
+  printf("[-d <level>] [-h] options [<menufile>]\n\n");
+  printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
-  return(0);
+  return -1;
 }
 /**********************************************************************/
 
@@ -119,7 +125,7 @@ main(int argc,char **argv)
   optind=optind?optind:1;
   opterr=0;
   while(1){
-    opt=getopt(argc,argv,"c:d:ht:");
+    opt=getopt(argc,argv,"c:d:eht:");
     if(opt==-1)
       break;
     switch(opt){
@@ -130,17 +136,18 @@ main(int argc,char **argv)
         if(optarg)
           debug=atoi(optarg);
         break;
+      case 'e':
+        erase=1;
+        break;
       case 'h':
-        help();
-        return(4);
+        return help();
       case 't':
         if(optarg)
           timeout=atoi(optarg);
         break;
       case '?':
       case ':':
-        help();
-        return 4;
+        return help();
     }
   }
 
@@ -150,13 +157,20 @@ main(int argc,char **argv)
   /* process non-option arg */
   if(argc<=optind){
     printf("No options.\n");
-    help();
-    return 4;
+    return help();
   }
 
   first_time=1;
   selection=0;
   strcpy(options,argv[optind]);
+  if(!strchr(options,command)){
+    printf("Error: default command not valid.\n\n");
+    return -1;
+    }
+  if(timeout&&!command){
+    printf("Error: timeout requires default command.\n\n");
+    return -1;
+    }
   if(argc>optind+1)
     strcpy(file_name,argv[optind+1]);
 
@@ -167,7 +181,10 @@ main(int argc,char **argv)
       break;
       }
     }while(!selection);
-    clear_screen();
+    if(erase)
+      clear_screen();
+    else
+      printf("\n");
     return selection;
 }
 /**********************************************************************/
