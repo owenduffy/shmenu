@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.7  1996/06/12 03:50:51  owen
-Revised handling of null filename.
+Revision 1.8  1996/06/12 23:18:46  owen
+Revision of return codes.
 
+ * Revision 1.7  1996/06/12  03:50:51  owen
+ * Revised handling of null filename.
+ *
  * Revision 1.6  1996/06/11  23:34:11  owen
  * Fixes for AIX.
  *
@@ -30,7 +33,11 @@ Revised handling of null filename.
 #include <stdio.h>
 #include <string.h>
 #include <termio.h>
-char version[6]="1.03",file_name[256]="menu.scr";
+#define NOOPT_NOEXIT -1
+#define NOOPT_EXIT -2
+#define HELP_EXIT -3
+#define ERROR_EXIT -4
+char version[6]="1.04",file_name[256]="menu.scr";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
 int rc,parmindx,selection=0,first_time,erase=0;
@@ -40,8 +47,7 @@ struct termio sioio,sioold;
 
 int clear_screen()
 {
-  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n");
-  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
   return 0;
 }
 /**********************************************************************/
@@ -67,6 +73,7 @@ display_file(char *file_name)
 }
 /**********************************************************************/
 
+
 int prompt()
 {
   char *p;
@@ -79,11 +86,11 @@ int prompt()
     printf("(%c) ",command);
   if(ioctl(1,TCGETA,&sioold)==-1){
     printf("ERROR: in call to ioctl() to save old tty setup\n");
-    return -1;
+    return ERROR_EXIT;
   }
   if(ioctl(1,TCGETA,&sioio)==-1){
     printf("ERROR: in call to ioctl() to copy tty setup\n");
-    return -1;
+    return ERROR_EXIT;
   }
   sioio.c_lflag=0;
   sioio.c_cc[VMIN]=timeout?0:1;
@@ -101,9 +108,11 @@ int prompt()
   ioctl(1,TCSETA,&sioold);
   timeout=0;
   first_time=0;
+  if(!option&&!file_name[0])
+    return NOOPT_EXIT;
   if(option==0x1b){
     putchar('\n');
-    return -1;
+    return 0;
   }
   if(command&&option==0x0a)
     option=command;
@@ -111,7 +120,7 @@ int prompt()
   if(p=strchr(options,option))
     return p-options+1;
   else
-    return 0;
+    return NOOPT_NOEXIT;
 }
 /**********************************************************************/
 
@@ -122,7 +131,7 @@ int help()
   printf("[-d <level>] [-h] options [<menufile>]\n\n");
   printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
-  return -1;
+  return HELP_EXIT;
 }
 /**********************************************************************/
 
@@ -173,7 +182,7 @@ main(int argc,char **argv)
   strcpy(options,argv[optind]);
   if(!strchr(options,command)){
     printf("Error: default command not valid.\n\n");
-    return -1;
+    return ERROR_EXIT;
   }
   if(timeout&&!command)
     timeout=0;
@@ -185,10 +194,8 @@ main(int argc,char **argv)
       selection=0;
       break;
     }
-    if(!selection&&!file_name[0])
-      selection=-2;
   }
-  while(!selection);
+  while(selection!=NOOPT_NOEXIT);
   if(erase)
     clear_screen();
   else
