@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.8  1996/06/12 23:18:46  owen
-Revision of return codes.
+Revision 1.9  1996/06/12 23:36:46  owen
+Bugs fixed.
 
+ * Revision 1.8  1996/06/12  23:18:46  owen
+ * Revision of return codes.
+ *
  * Revision 1.7  1996/06/12  03:50:51  owen
  * Revised handling of null filename.
  *
@@ -40,7 +43,7 @@ Revision of return codes.
 char version[6]="1.04",file_name[256]="menu.scr";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
-int rc,parmindx,selection=0,first_time,erase=0;
+int rc,parmindx,selection=0,first_time=1,erase=0;
 char options[256]="",command='\0';
 struct termio sioio,sioold;
 /************************************************************************/
@@ -177,8 +180,6 @@ main(int argc,char **argv)
     printf("No options.\n");
     return help();
   }
-  first_time=1;
-  selection=0;
   strcpy(options,argv[optind]);
   if(!strchr(options,command)){
     printf("Error: default command not valid.\n\n");
@@ -188,14 +189,13 @@ main(int argc,char **argv)
     timeout=0;
   if(argc>optind+1)
     strcpy(file_name,argv[optind+1]);
+  
   do{
     selection=prompt();
-    if(selection==-1){
-      selection=0;
-      break;
-    }
+    if(debug>0)
+      printf("selection: %d\n",selection);
   }
-  while(selection!=NOOPT_NOEXIT);
+  while(selection==NOOPT_NOEXIT);
   if(erase)
     clear_screen();
   else
