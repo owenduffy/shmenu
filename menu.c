@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.6  1996/06/11 23:34:11  owen
-Fixes for AIX.
+Revision 1.7  1996/06/12 03:50:51  owen
+Revised handling of null filename.
 
+ * Revision 1.6  1996/06/11  23:34:11  owen
+ * Fixes for AIX.
+ *
  * Revision 1.5  1996/06/11  21:52:00  owen
  * Reformatted.
  *
@@ -27,7 +30,7 @@ Fixes for AIX.
 #include <stdio.h>
 #include <string.h>
 #include <termio.h>
-char version[6]="1.02",file_name[256]="menu.scr";
+char version[6]="1.03",file_name[256]="menu.scr";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
 int rc,parmindx,selection=0,first_time,erase=0;
@@ -182,6 +185,8 @@ main(int argc,char **argv)
       selection=0;
       break;
     }
+    if(!selection&&!file_name[0])
+      selection=-2;
   }
   while(!selection);
   if(erase)
