@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.16  1996/06/18 22:43:14  owen
-Updated version no.
+Revision 1.17  1996/06/19 00:09:42  owen
+Fixed help for -b option.
 
+ * Revision 1.16  1996/06/18  22:43:14  owen
+ * Updated version no.
+ *
  * Revision 1.15  1996/06/18  22:39:55  owen
  * Merged of curses and non-curses code.
  *
@@ -220,7 +223,7 @@ int prompt_b()
 int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
-  printf("Usage: menu [-c <default> [-t <timeout>]] ");
+  printf("Usage: menu --b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
   printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
