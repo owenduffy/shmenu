@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.20  1996/06/25 09:23:09  owen
-Revised error return codes.
+Revision 1.21  1996/06/26 03:50:14  owen
+Added \r \n option for ENTER.
 
+ * Revision 1.20  1996/06/25  09:23:09  owen
+ * Revised error return codes.
+ *
  * Revision 1.19  1996/06/19  06:55:33  owen
  * Added beep, other minor fixes.
  *
@@ -142,7 +145,7 @@ int prompt_c()
   }
   while(option<0);
   /*ioctl(1,TCSETA,&sioold);*/
-  if(command&&option==0x0a)
+  if(command&&(option=='\r'||option=='\n'))
     option=command;
   if(p=strchr(options,option)){
     clear();
