@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.17  1996/06/19 00:09:42  owen
-Fixed help for -b option.
+Revision 1.18  1996/06/19 00:47:51  owen
+AIX fixes - halfdelay added.
 
+ * Revision 1.17  1996/06/19  00:09:42  owen
+ * Fixed help for -b option.
+ *
  * Revision 1.16  1996/06/18  22:43:14  owen
  * Updated version no.
  *
@@ -130,6 +133,7 @@ int prompt_c()
     }
   }
   while(option<0);
+  /*ioctl(1,TCSETA,&sioold);*/
   if(command&&option==0x0a)
     option=command;
   if(p=strchr(options,option)){
@@ -144,6 +148,22 @@ int prompt_c()
   move(promptrow,promptcol);
   return NOOPT_NOEXIT;
 }
+/************************************************************************/
+#ifdef HALFDELAY
+
+int halfdelay(int vtime)
+{
+  if(ioctl(1,TCGETA,&sioio)==-1){
+    printw("ERROR: in call to ioctl() to copy tty setup\n");
+    return ERROR_EXIT;
+  }
+  sioio.c_cc[VMIN]=time_out?0:1;
+  sioio.c_cc[VTIME]=vtime;
+  ioctl(1,TCSETA,&sioio);
+
+  return 0;
+}
+#endif
 #endif
 /************************************************************************/
 
@@ -315,10 +335,9 @@ main(int argc,char **argv)
     else{
       scrollok(stdscr,1);
       noecho();
+      raw();
       if(time_out)
         halfdelay(10);
-      else 
-        raw();
       prompt=prompt_c;
     }
   }
