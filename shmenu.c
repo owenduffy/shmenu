@@ -5,10 +5,13 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.12.1.1  1996/06/17 21:28:06  owen
-Branch of non-curses menu. Minor revisions for consistency with curses
-version.
+Revision 1.12.1.2  1996/06/17 21:33:28  owen
+Update version.
 
+ * Revision 1.12.1.1  1996/06/17  21:28:06  owen
+ * Branch of non-curses menu. Minor revisions for consistency with curses
+ * version.
+ *
  * Revision 1.12  1996/06/13  23:08:28  owen
  * Further revision of rc, selectable prompt, upcase revised.
  *
@@ -55,7 +58,7 @@ version.
 #define NOOPT_EXIT 255
 #define HELP_EXIT 254
 #define ERROR_EXIT 253
-char version[6]="1.06",file_name[256]="";
+char version[6]="1.07",file_name[256]="";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
 int rc,parmindx,selection=0,first_time=1,erase=0,upcase=0,lrc=0;
