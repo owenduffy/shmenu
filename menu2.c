@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.10  1996/06/13 10:19:19  owen
-Removed default menu file.
+Revision 1.11  1996/06/13 17:15:34  owen
+Issue rc in range 0 - 255.
 
+ * Revision 1.10  1996/06/13  10:19:19  owen
+ * Removed default menu file.
+ *
  * Revision 1.9  1996/06/12  23:36:46  owen
  * Bugs fixed.
  *
@@ -39,10 +42,10 @@ Removed default menu file.
 #include <stdio.h>
 #include <string.h>
 #include <termio.h>
-#define NOOPT_NOEXIT -1
-#define NOOPT_EXIT -2
-#define HELP_EXIT -3
-#define ERROR_EXIT -4
+#define NOOPT_NOEXIT 255
+#define NOOPT_EXIT 254
+#define HELP_EXIT 253
+#define ERROR_EXIT 252
 char version[6]="1.05",file_name[256]="";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
@@ -63,13 +66,15 @@ display_file(char *file_name)
   char menu[260];
   FILE *fmenu;
 
-  if(fmenu=fopen(file_name,"r")){
-    while(fgets(menu,sizeof(menu)-1,fmenu))
-      fputs(menu,stdout);
-    fclose(fmenu);
-  }
-  else{
-    if(file_name[0]){
+  if(debug>0)
+    printf("filename: :%s:\n",file_name);
+  if(file_name[0]){
+    if(fmenu=fopen(file_name,"r")){
+      while(fgets(menu,sizeof(menu)-1,fmenu))
+        fputs(menu,stdout);
+      fclose(fmenu);
+    }
+    else{
       printf("ERROR: cant find menu file: %s\n",file_name);
       if(first_time)
         printf("Valid options are: {%s}",options);
@@ -114,8 +119,6 @@ int prompt()
   ioctl(1,TCSETA,&sioold);
   timeout=0;
   first_time=0;
-  if(!option&&!file_name[0])
-    return NOOPT_EXIT;
   if(option==0x1b){
     putchar('\n');
     return 0;
@@ -125,8 +128,12 @@ int prompt()
   printf("%c \n",option);
   if(p=strchr(options,option))
     return p-options+1;
-  else
-    return NOOPT_NOEXIT;
+  else{
+    if(!file_name[0])
+      return NOOPT_EXIT;
+    else
+      return NOOPT_NOEXIT;
+  }
 }
 /**********************************************************************/
 
