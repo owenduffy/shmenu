@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.11  1996/06/13 17:15:34  owen
-Issue rc in range 0 - 255.
+Revision 1.12  1996/06/13 23:08:28  owen
+Further revision of rc, selectable prompt, upcase revised.
 
+ * Revision 1.11  1996/06/13  17:15:34  owen
+ * Issue rc in range 0 - 255.
+ *
  * Revision 1.10  1996/06/13  10:19:19  owen
  * Removed default menu file.
  *
@@ -42,15 +45,17 @@ Issue rc in range 0 - 255.
 #include <stdio.h>
 #include <string.h>
 #include <termio.h>
-#define NOOPT_NOEXIT 255
-#define NOOPT_EXIT 254
-#define HELP_EXIT 253
-#define ERROR_EXIT 252
-char version[6]="1.05",file_name[256]="";
+#include <ctype.h>
+#define ESC_EXIT 0
+#define NOOPT_NOEXIT -1
+#define NOOPT_EXIT 255
+#define HELP_EXIT 254
+#define ERROR_EXIT 253
+char version[6]="1.06",file_name[256]="";
 char rcsid[]="$Id$";
 int debug=0,timeout=0,option;
-int rc,parmindx,selection=0,first_time=1,erase=0;
-char options[256]="",command='\0';
+int rc,parmindx,selection=0,first_time=1,erase=0,upcase=0,lrc=0;
+char options[256]="",command='\0',promptstr[80]="Enter option ===>";
 struct termio sioio,sioold;
 /************************************************************************/
 
@@ -66,9 +71,9 @@ display_file(char *file_name)
   char menu[260];
   FILE *fmenu;
 
-  if(debug>0)
-    printf("filename: :%s:\n",file_name);
   if(file_name[0]){
+    if(erase)
+      clear_screen();
     if(fmenu=fopen(file_name,"r")){
       while(fgets(menu,sizeof(menu)-1,fmenu))
         fputs(menu,stdout);
@@ -92,7 +97,7 @@ int prompt()
   display_file(file_name);
   if(!first_time)
     printf("ERROR: option is not valid, choose one of {%s}",options);
-  printf("\nEnter option ===> ");
+  printf("\n%s ",promptstr);
   if(command)
     printf("(%c) ",command);
   if(ioctl(1,TCGETA,&sioold)==-1){
@@ -109,6 +114,8 @@ int prompt()
   ioctl(1,TCSETA,&sioio);
   do{
     option=getchar();
+    if(upcase)
+      option=toupper(option);
     if(timeout){
       --timeout;
       if(!timeout)
@@ -121,19 +128,15 @@ int prompt()
   first_time=0;
   if(option==0x1b){
     putchar('\n');
-    return 0;
+    return ESC_EXIT;
   }
   if(command&&option==0x0a)
     option=command;
   printf("%c \n",option);
   if(p=strchr(options,option))
     return p-options+1;
-  else{
-    if(!file_name[0])
-      return NOOPT_EXIT;
-    else
-      return NOOPT_NOEXIT;
-  }
+  else
+    return file_name[0]?NOOPT_NOEXIT:NOOPT_EXIT;
 }
 /**********************************************************************/
 
@@ -141,7 +144,7 @@ int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
   printf("Usage: menu [-e] [-c <default> [-t <timeout>]] ");
-  printf("[-d <level>] [-h] options [<menufile>]\n\n");
+  printf("[-d <level>] [-h] [-p <prompt>] [-r <rc>] options [<menufile>]\n\n");
   printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
   return HELP_EXIT;
@@ -154,11 +157,12 @@ main(int argc,char **argv)
   extern int optind,optopt,opterr;
   extern char *optarg;
   int opt;
+  char *p;
 
   /* process command line options */
   optind=optind?optind:1;
   /*opterr=0;*/
-  while((opt=getopt(argc,argv,"c:d:eht:"))!=EOF){
+  while((opt=getopt(argc,argv,"c:d:ehp:r:t:u"))!=EOF){
     switch(opt){
       case 'c':
         command=optarg[0];
@@ -170,11 +174,24 @@ main(int argc,char **argv)
       case 'e':
         erase=1;
         break;
+      case 'p':
+        if(optarg)
+          strcpy(promptstr,optarg);
+        break;
+      case 'r':
+        if(optarg)
+          lrc=atoi(optarg);
+        if(lrc==NOOPT_EXIT)
+          first_time=0;
+        break;
       case 'h':
         return help();
       case 't':
         if(optarg)
           timeout=atoi(optarg);
+        break;
+      case 'u':
+        upcase=1;
         break;
       case '?':
       case ':':
@@ -191,6 +208,11 @@ main(int argc,char **argv)
     return help();
   }
   strcpy(options,argv[optind]);
+  if(upcase){
+    command=toupper(command);
+    for(p=options;*p;p++)
+      *p=toupper(*p);
+  }
   if(!strchr(options,command)){
     printf("Error: default command not valid.\n\n");
     return ERROR_EXIT;
