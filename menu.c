@@ -5,15 +5,10 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.14  1996/06/16 23:16:00  owen
-Revision of error returns, help.
+Revision 1.12.1.1  1996/06/17 21:28:06  owen
+Branch of non-curses menu. Minor revisions for consistency with curses
+version.
 
- * Revision 1.13  1996/06/15  22:31:47  owen
- * Revision to use curses, menufile now mandatory.
- *
- * Revision 1.12  1996/06/13  23:08:28  owen
- * Further revision of rc, selectable prompt, upcase revised.
- *
  * Revision 1.12  1996/06/13  23:08:28  owen
  * Further revision of rc, selectable prompt, upcase revised.
  *
@@ -55,63 +50,71 @@ Revision of error returns, help.
 #include <string.h>
 #include <termio.h>
 #include <ctype.h>
-#include <curses.h>
 #define ESC_EXIT 0
 #define NOOPT_NOEXIT -1
+#define NOOPT_EXIT 255
 #define HELP_EXIT 254
 #define ERROR_EXIT 253
-char version[6]="2.01",file_name[256]="",work[256];
+char version[6]="1.06",file_name[256]="";
 char rcsid[]="$Id$";
-int debug=0,timeout=0,option,errorrow,promptrow,promptcol;
-int rc,parmindx,selection=0,pass=0,upcase=0;
+int debug=0,timeout=0,option;
+int rc,parmindx,selection=0,first_time=1,erase=0,upcase=0,lrc=0;
 char options[256]="",command='\0',promptstr[80]="Enter option ===>";
 struct termio sioio,sioold;
 /************************************************************************/
+
+int clear_screen()
+{
+  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+  return 0;
+}
+/**********************************************************************/
 
 display_file(char *file_name)
 {
   char menu[260];
   FILE *fmenu;
-  int y=0;
 
-  clear();
-  move(0,0);
-  if(fmenu=fopen(file_name,"r")){
-    while(fgets(menu,sizeof(menu)-1,fmenu))
-      addstr(menu);
-    fclose(fmenu);
-  }
-  else{
-    printw("\nWARNING: cannot find menu file: %s\n\n",file_name);
-    printw("Valid options are: {%s}",options);
+  if(file_name[0]){
+    clear_screen();
+    if(fmenu=fopen(file_name,"r")){
+      while(fgets(menu,sizeof(menu)-1,fmenu))
+        fputs(menu,stdout);
+      fclose(fmenu);
+    }
+    else{
+      printf("ERROR: cant find menu file: %s\n",file_name);
+      if(first_time)
+        printf("Valid options are: {%s}",options);
+    }
   }
   return 0;
 }
 /**********************************************************************/
 
+
 int prompt()
 {
   char *p;
-  int i;
 
-  if(pass==1){
-    move(errorrow,0);
-    printw("ERROR: option is not valid, choose one of {%s}",options);
-    move(promptrow,promptcol);
-  }
+  display_file(file_name);
+  if(!first_time)
+    printf("ERROR: option is not valid, choose one of {%s}",options);
+  printf("\n%s ",promptstr);
+  if(command)
+    printf("(%c) ",command);
   if(ioctl(1,TCGETA,&sioold)==-1){
-    printw("ERROR: in call to ioctl() to save old tty setup\n");
+    printf("ERROR: in call to ioctl() to save old tty setup\n");
     return ERROR_EXIT;
   }
   if(ioctl(1,TCGETA,&sioio)==-1){
-    printw("ERROR: in call to ioctl() to copy tty setup\n");
+    printf("ERROR: in call to ioctl() to copy tty setup\n");
     return ERROR_EXIT;
   }
   sioio.c_lflag=0;
   sioio.c_cc[VMIN]=timeout?0:1;
   sioio.c_cc[VTIME]=10;
   ioctl(1,TCSETA,&sioio);
-  refresh();
   do{
     option=getchar();
     if(upcase)
@@ -125,19 +128,18 @@ int prompt()
   while(option<0);
   ioctl(1,TCSETA,&sioold);
   timeout=0;
-  ++pass;
+  first_time=0;
   if(option==0x1b){
-    addch('\n');
+    putchar('\n');
     return ESC_EXIT;
   }
   if(command&&option==0x0a)
     option=command;
-  mvaddch(promptrow,promptcol,iscntrl(option)?'.':option);
-  move(promptrow,promptcol);
+  printf("%c \n",option);
   if(p=strchr(options,option))
     return p-options+1;
   else
-    return NOOPT_NOEXIT;
+    return file_name[0]?NOOPT_NOEXIT:NOOPT_EXIT;
 }
 /**********************************************************************/
 
@@ -145,7 +147,7 @@ int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
   printf("Usage: menu [-c <default> [-t <timeout>]] ");
-  printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
+  printf("[-d <level>] [-h] [-p <prompt>] [-r <rc>] options [<menufile>]\n\n");
   printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
   printf("All rights reserved.\n\n");
   return HELP_EXIT;
@@ -163,7 +165,7 @@ main(int argc,char **argv)
   /* process command line options */
   optind=optind?optind:1;
   /*opterr=0;*/
-  while((opt=getopt(argc,argv,"c:dhp:t:u"))!=EOF){
+  while((opt=getopt(argc,argv,"c:d:hp:r:t:u"))!=EOF){
     switch(opt){
       case 'c':
         command=optarg[0];
@@ -176,6 +178,12 @@ main(int argc,char **argv)
         if(optarg)
           strcpy(promptstr,optarg);
         break;
+      case 'r':
+        if(optarg)
+          lrc=atoi(optarg);
+        if(lrc==NOOPT_EXIT)
+          first_time=0;
+        break;
       case 'h':
         return help();
       case 't':
@@ -187,8 +195,7 @@ main(int argc,char **argv)
         break;
       case '?':
       case ':':
-        help();
-        return ERROR_EXIT;
+        return help();
     }
   }
 
@@ -197,7 +204,7 @@ main(int argc,char **argv)
   }
   /* process non-option arg */
   if(argc<=optind){
-    printf("ERROR: No options.\n");
+    printf("Error: No options supplied.\n");
     help();
     return ERROR_EXIT;
   }
@@ -215,32 +222,15 @@ main(int argc,char **argv)
     timeout=0;
   if(argc>optind+1)
     strcpy(file_name,argv[optind+1]);
-  else{
-    printf("ERROR: No menu filename.\n");
-    help();
-    return ERROR_EXIT;
-  }
-
-  initscr();
-  scrollok(stdscr,1);
-  display_file(file_name);
-  printw("\n%s ",promptstr);
-  if(command)
-    printw("(%c) ",command);
-  getyx(stdscr,promptrow,promptcol);
-  errorrow=promptrow-1;
-
+  
   do{
     selection=prompt();
   }
   while(selection==NOOPT_NOEXIT);
- 
   if(selection!=ERROR_EXIT)
-    clear();
+    clear_screen();
   else
-    printw("\n\n");
-  refresh();
-  endwin();
+    printf("\n\n");
   return selection;
 }
 /**********************************************************************/
