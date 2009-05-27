@@ -5,9 +5,12 @@ menu: a shell script enhancer for menus
 $Id$
 
 $Log$
-Revision 1.22  1996/06/30 00:01:36  owen
-Added automatic detection of cursor addressing, and basic mode setup.
+Revision 1.23  2009/05/27 21:46:45  owen
+Updated copyright message.
 
+ * Revision 1.22  1996/06/30  00:01:36  owen
+ * Added automatic detection of cursor addressing, and basic mode setup.
+ *
  * Revision 1.21  1996/06/26  03:50:14  owen
  * Added \r \n option for ENTER.
  *
@@ -85,7 +88,7 @@ Added automatic detection of cursor addressing, and basic mode setup.
 #define NOOPT_NOEXIT -1
 #define HELP_EXIT 125
 #define ERROR_EXIT 124
-char version[6]="2.04",file_name[256]="",work[256];
+char version[6]="2.05",file_name[256]="",work[256];
 char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
@@ -259,7 +262,7 @@ int help()
   printf("\nmenu: V%s %s\n\n",version,rcsid);
   printf("Usage: menu [-b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
-  printf("Copyright: Owen Duffy & Associates Pty Ltd 1987,1996.\n");
+  printf("Copyright: Owen Duffy 1987,2009.\n");
   printf("All rights reserved.\n\n");
   return HELP_EXIT;
 }
