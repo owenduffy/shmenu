@@ -1,10 +1,13 @@
 /*f-*/
 /************************************************************************
-menu: a shell script enhancer for menus
+shmenu: a shell script enhancer for menus
 
 $Id$
 
 $Log$
+Revision 1.24  2009/05/30 01:47:02  root
+Renamed to shmenu.
+
 Revision 1.23  2009/05/27 21:46:45  owen
 Updated copyright message.
 
@@ -88,7 +91,7 @@ Updated copyright message.
 #define NOOPT_NOEXIT -1
 #define HELP_EXIT 125
 #define ERROR_EXIT 124
-char version[6]="2.05",file_name[256]="",work[256];
+char version[6]="2.6.0",file_name[256]="",work[256];
 char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
@@ -260,7 +263,7 @@ int prompt_b()
 int help()
 {
   printf("\nmenu: V%s %s\n\n",version,rcsid);
-  printf("Usage: menu [-b] [-c <default> [-t <timeout>]] ");
+  printf("Usage: shmenu [-b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
   printf("Copyright: Owen Duffy 1987,2009.\n");
   printf("All rights reserved.\n\n");
