@@ -5,6 +5,9 @@ shmenu: a shell script enhancer for menus
 $Id$
 
 $Log$
+Revision 1.25  2009/05/30 02:34:36  root
+Get version from macro var.
+
 Revision 1.24  2009/05/30 01:47:02  root
 Renamed to shmenu.
 
@@ -91,7 +94,7 @@ Updated copyright message.
 #define NOOPT_NOEXIT -1
 #define HELP_EXIT 125
 #define ERROR_EXIT 124
-char version[6]="2.6.0",file_name[256]="",work[256];
+char version[]=VERSION,file_name[256]="",work[256];
 char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
