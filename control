@@ -1,0 +1,7 @@
+Package: shmenu
+Version:
+Architecture: armhf
+Maintainer: Owen Duffy <owen@owenduffy.net>
+Depends: libncurses6
+Section: utils
+Description: Simple menu program for shell files.
