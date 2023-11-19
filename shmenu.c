@@ -1,88 +1,6 @@
-/*f-*/
 /************************************************************************
 shmenu: a shell script enhancer for menus
-
-$Id$
-
-$Log$
-Revision 1.25  2009/05/30 02:34:36  root
-Get version from macro var.
-
-Revision 1.24  2009/05/30 01:47:02  root
-Renamed to shmenu.
-
-Revision 1.23  2009/05/27 21:46:45  owen
-Updated copyright message.
-
- * Revision 1.22  1996/06/30  00:01:36  owen
- * Added automatic detection of cursor addressing, and basic mode setup.
- *
- * Revision 1.21  1996/06/26  03:50:14  owen
- * Added \r \n option for ENTER.
- *
- * Revision 1.20  1996/06/25  09:23:09  owen
- * Revised error return codes.
- *
- * Revision 1.19  1996/06/19  06:55:33  owen
- * Added beep, other minor fixes.
- *
- * Revision 1.18  1996/06/19  00:47:51  owen
- * AIX fixes - halfdelay added.
- *
- * Revision 1.17  1996/06/19  00:09:42  owen
- * Fixed help for -b option.
- *
- * Revision 1.16  1996/06/18  22:43:14  owen
- * Updated version no.
- *
- * Revision 1.15  1996/06/18  22:39:55  owen
- * Merged of curses and non-curses code.
- *
- * Revision 1.14  1996/06/16  23:16:00  owen
- * Revision of error returns, help.
- *
- * Revision 1.13  1996/06/15  22:31:47  owen
- * Revision to use curses, menufile now mandatory.
- *
- * Revision 1.12  1996/06/13  23:08:28  owen
- * Further revision of rc, selectable prompt, upcase revised.
- *
- * Revision 1.12  1996/06/13  23:08:28  owen
- * Further revision of rc, selectable prompt, upcase revised.
- *
- * Revision 1.11  1996/06/13  17:15:34  owen
- * Issue rc in range 0 - 255.
- *
- * Revision 1.10  1996/06/13  10:19:19  owen
- * Removed default menu file.
- *
- * Revision 1.9  1996/06/12  23:36:46  owen
- * Bugs fixed.
- *
- * Revision 1.8  1996/06/12  23:18:46  owen
- * Revision of return codes.
- *
- * Revision 1.7  1996/06/12  03:50:51  owen
- * Revised handling of null filename.
- *
- * Revision 1.6  1996/06/11  23:34:11  owen
- * Fixes for AIX.
- *
- * Revision 1.5  1996/06/11  21:52:00  owen
- * Reformatted.
- *
- * Revision 1.4  1996/06/11  21:47:11  owen
- * Revised default/timeout handling.
- *
- * Revision 1.3  1996/06/11  11:19:45  owen
- * Error checking of parms.
- *
- * Revision 1.2  1996/06/11  10:58:45  owen
- * Added options.
- *
- *
 *************************************************************************/
-/*f+*/
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -95,7 +13,6 @@ Updated copyright message.
 #define HELP_EXIT 125
 #define ERROR_EXIT 124
 char version[]=VERSION,file_name[256]="",work[256];
-char rcsid[]="$Id$";
 int debug=0,time_out=0,option,errorrow,promptrow,promptcol;
 int rc,parmindx,selection=0,pass=0,upcase=0,basic=1;
 char options[256]="",command='\0',promptstr[80]="Enter option ===>";
@@ -265,10 +182,10 @@ int prompt_b()
 
 int help()
 {
-  printf("\nmenu: V%s %s\n\n",version,rcsid);
+  printf("\nshmenu: V%s\n\n",version);
   printf("Usage: shmenu [-b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
-  printf("Copyright: Owen Duffy 1987,2009.\n");
+  printf("Copyright: Owen Duffy 1987,2009,2023.\n");
   printf("All rights reserved.\n\n");
   return HELP_EXIT;
 }
