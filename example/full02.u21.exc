@@ -1,0 +1,8 @@
+export/*
+mnt/*
+media/*
+proc/*
+sys/*
+work/*
+var/lib/mpd/music/*
+

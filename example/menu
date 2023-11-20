@@ -1,0 +1,45 @@
+#! /bin/bash
+name=${0##*/}
+backupdir=`readlink -f $0`
+backupdir=${backupdir%/*}
+
+#echo backupdir is $backupdir
+#exit
+tstamp=$(date +%Y%m%d%H%M)
+odir=/media/usbhdd0/$(hostname)
+mkdir -p $odir
+ofile=${odir}/${tstamp}
+#lfile=$backupdir/full01.${tstamp}.lst
+
+function hetc {
+echo -e \\nHit ENTER to continue...
+read
+}
+
+until shmenu 123456789 $backupdir/menu.scr; do
+case "$?" in
+#1) mount -t vfat -o noexec /dev/sdb1 /media/usbhdd0;
+#1) mount -t ntfs -o noexec /dev/sdf1 /media/usbhdd0;
+1) mount -w -t ntfs -o noexec -U 064035CD4035C469 /media/usbhdd0;
+hetc;;
+2) umount /media/usbhdd0;
+hetc;;
+3) mount;
+hetc;;
+4) $backupdir/full02;
+hetc;;
+5) mc $odir;;
+6) mount -w -t ntfs -o noexec -U 0C66411A66410644 /media/usbhdd0;
+hetc;;
+7) mount -w -t ntfs -o noexec -U A26063DC6063B627 /media/usbhdd0;
+hetc;;
+8) mount -w -t ntfs -o noexec -U DEE00D68E00D47EB /media/usbhdd0;
+hetc;;
+9) mount -w -t ntfs -o noexec -U 76449B86449B47AF /media/usbhdd0;
+hetc;;
+#echo -e \\nHit any key to continue...; read;;
+255) echo "got noopt_exit";;
+*) echo rc is $?; echo got wild;;
+esac
+
+done

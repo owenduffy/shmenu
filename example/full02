@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#backup script - creates tar of filesystem
+#
+
+renice 19 $$
+umask 177
+
+echo
+echo $0
+echo
+
+name=${0##*/}
+backupdir=`readlink -f $0`
+backupdir=${backupdir%/*}
+
+tstamp=$(date +%Y%m%d%H%M)
+odir=/media/usbhdd0/$(hostname)
+mkdir -p $odir
+ofile=${odir}/$name.${tstamp}
+lfile=$backupdir/$name.${tstamp}.lst
+
+echo Backup to ${ofile}
+cd /
+#backup
+echo tar -X $backupdir/$name.$(hostname).exc -cvf ${ofile}.tar / \>$lfile
+tar -X $backupdir/$name.$(hostname).exc -cvf ${ofile}.tar / >$lfile
+#check that we can read the tape we have created
+tar -tvf ${ofile}.tar >$ofile.tar.toc
+
+logger -t Backup "$name  $tstamp completed"
+
+echo
+echo "Command for restore of this backup: tar -xvf ${ofile}"
+echo
+
+#all done

@@ -1,0 +1,25 @@
+
+Backup menu
+============
+
+   1. Mount USB HDD0 on /media/usbhdd0 -U 064035CD4035C469
+
+   2. Unmount /media/usbhdd0
+
+   3. Show mounts
+
+   4. full backup (full02)
+
+   5. mc $odir
+
+   6. mount WD 2TB -U 0C66411A66410644
+
+   7. mount Samsung 3TB -U A26063DC6063B627
+
+   8. mount Seagate 1.8TB -U DEE00D68E00D47EB
+
+   9. mount WD 4TB -U 76449B86449B47AF
+
+ ESC. Quit
+
+
