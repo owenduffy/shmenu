@@ -16,7 +16,7 @@ echo -e \\nHit ENTER to continue...
 read
 }
 
-until shmenu 123456789 $backupdir/menu.scr; do
+until shmenu 123456789 $backupdir/menu.menu; do
 case "$?" in
 #1) mount -t vfat -o noexec /dev/sdb1 /media/usbhdd0;
 #1) mount -t ntfs -o noexec /dev/sdf1 /media/usbhdd0;

@@ -8,6 +8,7 @@ shmenu: a shell script enhancer for menus
 #include <ctype.h>
 #ifdef CURSES
 #include <curses.h>
+#include <term.h>
 #endif
 #define NOOPT_NOEXIT -1
 #define HELP_EXIT 125
@@ -185,7 +186,7 @@ int help()
   printf("\nshmenu: V%s\n\n",version);
   printf("Usage: shmenu [-b] [-c <default> [-t <timeout>]] ");
   printf("[-d <level>] [-h] [-p <prompt>] <options> <menufile>\n\n");
-  printf("Copyright: Owen Duffy 1987,2009,2023.\n");
+  printf("Copyright: Owen Duffy 1987,2009,2025.\n");
   printf("All rights reserved.\n\n");
   return HELP_EXIT;
 }
@@ -271,7 +272,7 @@ main(int argc,char **argv)
   #ifdef CURSES
   if(!basic){
     /*get terminfo entry for terminal*/
-    setupterm(NULL,stdout,&rc);
+    setupterm(NULL,1,&rc);
     /*set basic flag if terminal does not support cursor addressing*/
     basic=rc==1?tigetstr("cup")==0:1;
   }
