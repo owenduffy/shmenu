@@ -1,7 +1,7 @@
 Package: shmenu
 Version:
-Architecture: armhf
+Architecture: replaced in build process, see makefile
 Maintainer: Owen Duffy <owen@owenduffy.net>
-Depends: libncurses5|libncurses6
+Depends: replaced in build process, see makefile 
 Section: utils
 Description: Simple menu program for shell files.

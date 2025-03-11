@@ -1,5 +1,5 @@
 PKG=shmenu
-VERSION=2.9.0
+VERSION=2.10.0
 REL=1
 CFLAGS=-I/usr/include/ncurses -DCURSES -DVERSION=\"$(VERSION)\"
 LDLIBS=-lncursesw
@@ -22,4 +22,5 @@ $(PKG)-$(VERSION)-$(REL)-$(DEB_BUILD_ARCH).deb: all
 		sed 's\  ./\  \g' >./DEBIAN/md5sums
 	sed 's/^Version:.*/Version: $(VERSION)/' <control >./pkg/DEBIAN/control
 	sed -i 's/^Architecture:.*/Architecture: $(DEB_BUILD_ARCH)/' ./pkg/DEBIAN/control
+	sed -i 's/^Depends:.*/Depends: libncursesw5:$(DEB_BUILD_ARCH)|libncursesw6:$(DEB_BUILD_ARCH)/' ./pkg/DEBIAN/control
 	dpkg -b pkg $(PKG)-$(VERSION)-$(REL)-$(DEB_BUILD_ARCH).deb
