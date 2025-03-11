@@ -27,17 +27,6 @@ sudo apt-get install libncursesw6:armhf
 #get and install libncurses6 as necessary  
 sudo apt-get install libncursesw6
 
-## EDITOR
-
-The script uses the environment variable EDITOR. If it is not set sensibly then:
-
-- find the path to your preferred editor, eg whereis nano
-- at the end of ~/.profile, add this line (modified to suit your own editor)
-
-export EDITOR=/usr/bin/nano
-
-Log off and login again to test it.
-
 # Unified characters
 
 v2.11 uses libncursesw and should support UTF-8.
