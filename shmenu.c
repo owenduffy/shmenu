@@ -8,6 +8,7 @@ shmenu: a shell script enhancer for menus
 #include <termio.h>
 #include <ctype.h>
 #ifdef CURSES
+#include <locale.h>
 #include <curses.h>
 #include <term.h>
 #endif
@@ -278,6 +279,7 @@ int main(int argc,char **argv)
     basic=rc==1?tigetstr("cup")==0:1;
   }
   if(!basic){
+    setlocale(LC_ALL,"");
     if(initscr()==0)
       basic=1;
     else{

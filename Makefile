@@ -1,5 +1,5 @@
 PKG=shmenu
-VERSION=2.10.0
+VERSION=2.11.0
 REL=1
 CFLAGS=-I/usr/include/ncurses -DCURSES -DVERSION=\"$(VERSION)\"
 LDLIBS=-lncursesw
