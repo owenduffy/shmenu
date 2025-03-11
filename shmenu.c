@@ -3,6 +3,7 @@ shmenu: a shell script enhancer for menus
 *************************************************************************/
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <termio.h>
 #include <ctype.h>
@@ -22,7 +23,7 @@ int (*prompt)(void),(*clrscr)(void);
 /************************************************************************/
 #ifdef CURSES
 
-display_file_c(char *file_name)
+int display_file_c(char *file_name)
 {
   char menu[260];
   FILE *fmenu;
@@ -115,7 +116,7 @@ int clear_b()
 }
 /**********************************************************************/
 
-display_file_b(char *file_name)
+int display_file_b(char *file_name)
 {
   char menu[260];
   FILE *fmenu;
@@ -192,7 +193,7 @@ int help()
 }
 /**********************************************************************/
 
-main(int argc,char **argv)
+int main(int argc,char **argv)
 {
   int rc;
   extern int optind,optopt,opterr;
@@ -295,7 +296,8 @@ main(int argc,char **argv)
       selection=prompt();
   }
   while(selection==NOOPT_NOEXIT);
- 
+
+  endwin();
   return selection;
 }
 /**********************************************************************/

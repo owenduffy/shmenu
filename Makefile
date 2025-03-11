@@ -1,8 +1,8 @@
 PKG=shmenu
-VERSION=2.8.0
+VERSION=2.9.0
 REL=1
 CFLAGS=-I/usr/include/ncurses -DCURSES -DVERSION=\"$(VERSION)\"
-LDLIBS=-lncurses
+LDLIBS=-lncursesw
 #BINDIR=/usr/local/bin
 -include /usr/share/dpkg/architecture.mk
 
