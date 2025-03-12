@@ -5,7 +5,7 @@
 Get the appropriate deb package for your architecture. Check the [releases](https://github.com/owenduffy/shmenu/releases) and use the
 appropriate file name below.
 
-If you are using 64 bit RPi (arch=AArch64 or AMD64) use the arhf deb package and see the notes later.
+If you are using 64 bit RPi (arch=AArch64 or AMD64) use the armhf deb package and see the notes later.
 
 #get shmenu package and install it  
 wget https://github.com/owenduffy/shmenu/releases/download/v2.11.0/shmenu-2.11.0-1-armhf.deb  
