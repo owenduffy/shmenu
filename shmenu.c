@@ -299,7 +299,9 @@ int main(int argc,char **argv)
   }
   while(selection==NOOPT_NOEXIT);
 
-  endwin();
+  if(!basic){
+    endwin();
+  }
   return selection;
 }
 /**********************************************************************/
