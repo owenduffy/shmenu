@@ -8,7 +8,7 @@ appropriate file name below.
 If you are using 64 bit RPi (arch=AArch64 or AMD64) use the armhf deb package and see the notes later.
 
 #get shmenu package and install it  
-wget https://github.com/owenduffy/shmenu/releases/download/v2.11.0/shmenu-2.11.0-1-armhf.deb  
+wget https://github.com/owenduffy/shmenu/releases/download/v2.12.0/shmenu-2.12.0-1-armhf.deb  
 sudo dpkg -i shmenu-2.11.0-1-armhf.deb
 
 Type shmenu at the prompt and you should get the shmenu copyright message.
