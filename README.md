@@ -30,3 +30,7 @@ sudo apt-get install libncursesw6
 # Unified characters
 
 v2.11 uses libncursesw and should support UTF-8.
+
+![UTF-8 example](BoxCharactersScreenshot.png)
+
+Above is an example.
